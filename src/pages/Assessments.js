@@ -1,29 +1,29 @@
-import React from 'react';
-import { useState, useEffect } from 'react'; 
+import React from 'react'
+import { useState, useEffect } from 'react'
 
-import Table from '../components/Table';
+import Table from '../components/Table'
 
 export default function Assessments() {
   const [hackers, setHackers] = useState([
     {
-      fname: "Derek",
-      lname: "Chen",
-      email: "derek@nwplus.io",
-      score: 7
+      fname: 'Derek',
+      lname: 'Chen',
+      email: 'derek@nwplus.io',
+      score: 7,
     },
     {
-      fname: "Alex",
-      lname: "Lin",
-      email: "alex@nwplus.io",
-      score: 7
+      fname: 'Alex',
+      lname: 'Lin',
+      email: 'alex@nwplus.io',
+      score: 7,
     },
     {
-      fname: "test",
-      lname: "user",
-      email: "test@nwplus.io",
-      score: 0
-    }
-  ]);
+      fname: 'test',
+      lname: 'user',
+      email: 'test@nwplus.io',
+      score: 0,
+    },
+  ])
   const [selectedHacker, setSelectedHacker] = useState({})
 
   useEffect(() => {
@@ -31,8 +31,12 @@ export default function Assessments() {
   }, [])
 
   return (
-      <div>
-        <Table hackers={hackers} selectedHacker={selectedHacker} setSelectedHacker={setSelectedHacker} />
-      </div>
-  );
+    <div>
+      <Table
+        hackers={hackers}
+        selectedHacker={selectedHacker}
+        setSelectedHacker={setSelectedHacker}
+      />
+    </div>
+  )
 }
