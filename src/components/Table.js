@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { COLOR } from '../constants';
+import ApplicantResponse from './applicantResponse'
+import ApplicantScore from './applicantScore'
 
 const styles = {
     nameEmailContainer: {
@@ -116,8 +118,9 @@ export default function Table(props) {
             {
                 Object.keys(selectedHacker).length !== 0 ? (
                     <React.Fragment>
-                        <div style={{"flex": 1}}>Scoring</div>
-                        <div style={{"flex": 1}}>Overview/Resume/Comments</div>
+                        <ApplicantScore style={{"flex": 1}}/>
+                        <ApplicantResponse style={{"flex": 1}} /> 
+
                     </React.Fragment>
                 ) : (
                     <div></div>

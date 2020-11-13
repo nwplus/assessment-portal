@@ -11,6 +11,7 @@ export default function ScoreInput({label, score}) {
                 {label} 
             </label>
             <div style={{display: "flex"}}>
+                <Number number="0"/>
                 <Number number="1"/>
                 <Number number="2"/>
                 <Number number="3"/>
