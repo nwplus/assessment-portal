@@ -1,9 +1,11 @@
 // these are the blue buttons for the applicantScore sidebar
 
-import React from 'react'
+import React, {useState} from 'react'
 import Number from './numberIcon'
 
 export default function ScoreInput({label, score}) {
+
+    const [currScore, setScore] = useState(score)
 
     return(
         <div>

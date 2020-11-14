@@ -15,4 +15,10 @@ export const COLOR = {
     UNSCORED_GRAY: "#E0E0E0",
     LIGHT_BLUE: "#F6FEFF",
     BLUE_TEXT: "#2F80ED"
-  };
+};
+
+export const TABS = {
+  OVERVIEW: "Overview",
+  RESUME:   "Resume",
+  COMMENTS: "Comments"
+}

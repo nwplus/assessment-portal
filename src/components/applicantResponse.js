@@ -1,10 +1,11 @@
 // this is the third sidebar for the scoring page
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import ResponseInput from './responseInput'
-import { COLOR } from '../constants'
+import { COLOR, TABS } from '../constants'
 import { render } from '@testing-library/react';
+import { Document, Page, pdfjs } from "react-pdf";
 
 
 const Main = styled.div`
@@ -23,37 +24,33 @@ const Tab = styled.div`
     }
 `;
 
-export default function ApplicantResponse() {
+export default function ApplicantResponse(props) {
 
-    const tabs = ["Overview", "Resume", "Comments"]
+    useEffect(() => { // DO NOT DELETE
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+    }, [])
 
-    const [activeTab, setActiveTab] = useState('Overview')
+    
 
-  
 
+    const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
 
     return(
         <Main>
             <div style={{ "display": "flex", "flexDirection": "row"}}>
-                <Tab onClick={()=>(setActiveTab('Overview'))}> Overview </Tab>
-                <Tab onClick={()=>(setActiveTab('Resume'))}> Resume </Tab>
-                <Tab onClick={()=>(setActiveTab('Comments'))}> Comments </Tab>
+                <Tab onClick={()=>(setActiveTab(TABS.OVERVIEW))}> Overview </Tab>
+                <Tab onClick={()=>(setActiveTab(TABS.RESUME))}> Resume </Tab>
+                <Tab onClick={()=>(setActiveTab(TABS.COMMENTS))}> Comments </Tab>
             </div>
-    
-            <div>
-                Current tab is {activeTab}
-            </div>
-
-            {activeTab === 'Overview' ?
+            {activeTab === TABS.OVERVIEW ?
                 <OverviewTab> </OverviewTab> :
-                activeTab === 'Resume' ?
-                    <ResumeTab></ResumeTab> :
+                activeTab === TABS.RESUME ?
+                    <ResumeTab pdf={props.hacker.resume}></ResumeTab> :
                     <CommentTab></CommentTab>
             }
 
         </Main>
     )
-
 
     function OverviewTab() {
         return(
@@ -64,9 +61,11 @@ export default function ApplicantResponse() {
         )
     }
 
-    function ResumeTab(){
+    function ResumeTab(props){
         return(
-            <div> RESUME !</div>
+            <Document file={props.pdf}>
+                <Page pageNumber={1} />
+            </Document>
         )
     }
 

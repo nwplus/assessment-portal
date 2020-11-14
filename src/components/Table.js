@@ -76,6 +76,11 @@ export default function Table(props) {
     const selectHacker = (hacker) => {
         props.setSelectedHacker(hacker);
     }
+
+    function totalScore(hackerScore) { // summing up values score
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        return Object.values(hackerScore).reduce(reducer); 
+    }
     
     function Row(rowProp) {
         return (
@@ -87,7 +92,7 @@ export default function Table(props) {
                     </div>
                     <div style={styles.indexScoreContainer}>
                         <LightGrayText>{rowProp.index}</LightGrayText>
-                        {rowProp.hacker.score ? <Scored>{rowProp.hacker.score}/10</Scored> : <Unscored>/10</Unscored>}
+                        {rowProp.hacker.score ? <Scored>{totalScore(rowProp.hacker.score)}/10</Scored> : <Unscored>/10</Unscored>}
                     </div>
                 </SelectedRowDiv>
             ) : (
@@ -98,7 +103,7 @@ export default function Table(props) {
                     </div>
                     <div style={styles.indexScoreContainer}>
                         <LightGrayText>{rowProp.index}</LightGrayText>
-                        {rowProp.hacker.score ? <Scored>{rowProp.hacker.score}/10</Scored> : <Unscored>/10</Unscored>}
+                        {rowProp.hacker.score ? <Scored>{totalScore(rowProp.hacker.score)}/10</Scored> : <Unscored>/10</Unscored>}
                     </div>
                 </UnselectedRowDiv>
             )
@@ -118,8 +123,8 @@ export default function Table(props) {
             {
                 Object.keys(selectedHacker).length !== 0 ? (
                     <React.Fragment>
-                        <ApplicantScore style={{"flex": 1}}/>
-                        <ApplicantResponse style={{"flex": 1}} /> 
+                        <ApplicantScore hacker={selectedHacker} style={{"flex": 1}}/>
+                        <ApplicantResponse hacker={selectedHacker} style={{"flex": 1}} /> 
 
                     </React.Fragment>
                 ) : (
