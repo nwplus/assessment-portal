@@ -28,6 +28,7 @@ export default function ApplicantResponse(props) {
 
     useEffect(() => { // DO NOT DELETE
         pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+        console.log("applicantResponse", props);
     }, [])
 
     
@@ -36,6 +37,7 @@ export default function ApplicantResponse(props) {
     const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
 
     return(
+        
         <Main>
             <div style={{ "display": "flex", "flexDirection": "row"}}>
                 <Tab onClick={()=>(setActiveTab(TABS.OVERVIEW))}> Overview </Tab>
@@ -46,14 +48,15 @@ export default function ApplicantResponse(props) {
                 <OverviewTab> </OverviewTab> :
                 activeTab === TABS.RESUME ?
                     <ResumeTab pdf={props.hacker.resume}></ResumeTab> :
-                    <CommentTab></CommentTab>
+                    <CommentTab comments={props.hacker.comments}></CommentTab>
             }
 
         </Main>
     )
 
     function OverviewTab() {
-        return(
+        return( // i think we can do a mapping from KV pairs of data elements into a single response label
+            // for i in map: <ReponseInput label={key} reponse={value} /> 
             <>
                 <ResponseInput label="Is this your first hackathon?" response="yes" />
                 <ResponseInput label="GitHub/GitLab/BitBucket" reponse="https://github.com/yungalyx" />
@@ -69,10 +72,26 @@ export default function ApplicantResponse(props) {
         )
     }
 
-    function CommentTab(){
-        return(
-            <div> Comments !</div>
-        )
+    function CommentTab(props){
+        if(props.comments) {
+            return(
+                <div>
+                    {Object.entries(props.comments).map(([key, value])=>(
+                        <div> {key} </div>
+                    ))}
+                </div>
+            )
+        } else {
+            return(<div> got nothing fam </div>)
+        } 
     }
+
+        // {Object.entriesprops.map((id, data) => {
+        //     return (
+        //     <div key={id}> {data.comment} by {data.by} </div>
+        //         )
+        //     })
+        // }
+       
 
 }

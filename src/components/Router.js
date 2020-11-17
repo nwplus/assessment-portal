@@ -4,8 +4,8 @@ import {
     Route,
     Switch
 } from 'react-router-dom'
-import Landing from '../pages/Landing'
-import Assessments from '../pages/Assessments'
+import Landing from '../pages/landing'
+import Assessments from '../pages/assessments'
 
 export default function Router() {
     return (

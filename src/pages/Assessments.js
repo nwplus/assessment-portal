@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import testPDf from '../assets/testResume.pdf'
 
-import Table from '../components/Table'
+import Table from '../components/table'
 
 export default function Assessments() {
   const [hackers, setHackers] = useState([
@@ -28,7 +28,11 @@ export default function Assessments() {
         InterestScore: 2,
         PassionScore: 5,
       },
-      resume: testPDf
+      resume: testPDf,
+      comments: { 
+        hola:{comment: "this guy sus", by: "alex"}, 
+        sura:{comment: "vote red", by:"erica"}
+      }
     },
     {
       fname: 'test',
