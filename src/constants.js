@@ -18,3 +18,8 @@ export const COLOR = {
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
 }
+export const SORT = {
+  TIMESTAMP: 'Timestamp',
+  LAST_NAME: 'Last Name',
+  FIRST_NAME: 'First Name',
+}

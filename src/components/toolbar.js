@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR } from '../constants'
+import { COLOR, SORT } from '../constants'
 import { useState } from 'react'
 import Arrow from '../assets/arrow.svg'
 import MagnifyingGlass from '../assets/magnifyingGlass.svg'
@@ -65,10 +65,6 @@ const FilterIcon = styled.img`
   margin-left: 30px;
 `
 
-const TIMESTAMP = 'Timestamp'
-const LAST_NAME = 'Last Name'
-const FIRST_NAME = 'First Name'
-
 export default function ToolBar(props) {
   const [isDescending, setIsDescending] = useState(false)
 
@@ -87,9 +83,9 @@ export default function ToolBar(props) {
     const temp = [...props.hackers]
     temp.sort((hackerOne, hackerTwo) => {
       switch (value) {
-        case LAST_NAME:
+        case SORT.LAST_NAME:
           return hackerOne['lname'].localeCompare(hackerTwo['lname'])
-        case FIRST_NAME:
+        case SORT.FIRST_NAME:
           return hackerOne['fname'].localeCompare(hackerTwo['fname'])
         default:
           // sort by time
@@ -122,9 +118,9 @@ export default function ToolBar(props) {
             handleSortBy(event)
           }}
         >
-          <option value={TIMESTAMP}>{TIMESTAMP}</option>
-          <option value={LAST_NAME}>{LAST_NAME}</option>
-          <option value={FIRST_NAME}>{FIRST_NAME}</option>
+          <option value={SORT.TIMESTAMP}>{SORT.TIMESTAMP}</option>
+          <option value={SORT.LAST_NAME}>{SORT.LAST_NAME}</option>
+          <option value={SORT.FIRST_NAME}>{SORT.FIRST_NAME}</option>
         </SortSelect>
       </SortContainer>
       {isDescending ? (
