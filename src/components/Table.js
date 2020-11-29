@@ -70,28 +70,29 @@ const Unscored = styled.p`
 export default function Table(props) {
   const selectedHacker = props.selectedHacker
 
-  function totalScore(hackerScore) { // summing up values score
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    return Object.values(hackerScore).reduce(reducer); 
+  function totalScore(hackerScore) {
+    // summing up values score
+    const reducer = (accumulator, currentValue) => accumulator + currentValue
+    return Object.values(hackerScore).reduce(reducer)
   }
 
   const selectHacker = hacker => {
-      props.setSelectedHacker(hacker)
+    props.setSelectedHacker(hacker)
   }
 
   function Row(rowProp) {
-    return selectedHacker.email === rowProp.hacker.email ? (
+    return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
       <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
           <SelectedName>
-            {rowProp.hacker.fname} {rowProp.hacker.lname}
+            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}
           </SelectedName>
-          <BlueText>{rowProp.hacker.email}</BlueText>
+          <BlueText>{rowProp.hacker.basicInfo.email}</BlueText>
         </div>
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{rowProp.hacker.score}/10</Scored>
+            <Scored>{totalScore(rowProp.hacker.score)}/10</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -101,14 +102,14 @@ export default function Table(props) {
       <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
           <UnselectedName>
-            {rowProp.hacker.fname} {rowProp.hacker.lname}
+            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}
           </UnselectedName>
-          <LightGrayText>{rowProp.hacker.email}</LightGrayText>
+          <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
         </div>
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{rowProp.hacker.score}/10</Scored>
+            <Scored>{totalScore(rowProp.hacker.score)}/10</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -121,13 +122,13 @@ export default function Table(props) {
     <div style={{ display: 'flex' }}>
       <div style={{ flex: 1 }}>
         {props.displayedHackers.map((hacker, index) => {
-          return <Row key={hacker.email} hacker={hacker} index={index} />
+          return <Row key={hacker.basicInfo.email} hacker={hacker} index={index} />
         })}
       </div>
       {Object.keys(selectedHacker).length !== 0 ? (
         <React.Fragment>
-            <ApplicantScore hacker={selectedHacker} style={{"flex": 1}}/>
-            <ApplicantResponse hacker={selectedHacker} style={{"flex": 1}} /> 
+          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
+          <ApplicantResponse hacker={selectedHacker} style={{ flex: 1 }} />
         </React.Fragment>
       ) : (
         <div></div>
