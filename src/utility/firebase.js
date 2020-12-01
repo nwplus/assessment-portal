@@ -1,5 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/storage'
+import 'firebase/firestore'
 
 const config = {
   apiKey: process.env.REACT_APP_DEV_PUBLIC_FIREBASE_API_KEY,
@@ -13,5 +15,20 @@ const config = {
 }
 
 const app = firebase.initializeApp(config)
-
 export default app
+
+export const db = firebase.firestore()
+export const storage = firebase.storage()
+
+export const getAllApplicants = async website => {
+  const refs = await db
+    .collection('Hackathons')
+    .doc(website) // hardcode for event
+    .collection('Applicants')
+    .get()
+  const applicants = {}
+  refs.docs.forEach(doc => {
+    applicants[doc.id] = doc.data()
+  })
+  return applicants
+}

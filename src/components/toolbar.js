@@ -72,7 +72,7 @@ export default function ToolBar(props) {
     const value = event.target.value
     props.setDisplayedHackers(
       props.hackers.filter(hacker => {
-        const fullName = `${hacker.fname} ${hacker.lname}`
+        const fullName = `${hacker.basicInfo.fname} ${hacker.basicInfo.lname}`
         return fullName.toLowerCase().includes(value.toLowerCase().trim())
       })
     )
@@ -84,9 +84,9 @@ export default function ToolBar(props) {
     temp.sort((hackerOne, hackerTwo) => {
       switch (value) {
         case SORT.LAST_NAME:
-          return hackerOne['lname'].localeCompare(hackerTwo['lname'])
+          return hackerOne['lastName'].localeCompare(hackerTwo['lastName'])
         case SORT.FIRST_NAME:
-          return hackerOne['fname'].localeCompare(hackerTwo['fname'])
+          return hackerOne['firstName'].localeCompare(hackerTwo['firstName'])
         default:
           // sort by time
           return hackerOne['timestamp'] - hackerTwo['timestamp']

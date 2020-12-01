@@ -1,7 +1,4 @@
 export const COLOR = {
-  BACKGROUND: '#F8F8F8',
-  WHITE: '#FFFFFF',
-  GRAY: '#EDEDED',
   PRIMARY: '#2D2937',
   PRIMARY_DARK: '#1b1821',
   TEXT: '#5A5A5A',
@@ -18,6 +15,13 @@ export const COLOR = {
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
 }
+
+export const TABS = {
+  OVERVIEW: "Overview",
+  RESUME:   "Resume",
+  COMMENTS: "Comments"
+}
+
 export const SORT = {
   TIMESTAMP: 'Timestamp',
   LAST_NAME: 'Last Name',

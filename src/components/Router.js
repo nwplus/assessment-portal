@@ -6,13 +6,16 @@ import { Auth } from '../utility/auth'
 import PrivateRoute from './privateRoute'
 import Login from '../pages/login'
 
+//  <PrivateRoute exact path="/" component={Landing} />
+// <PrivateRoute exact path="/assessments" component={Assessments} />
+
 export default function Router() {
   return (
     <Auth>
       <BrowserRouter>
         <Switch>
-          <PrivateRoute exact path="/" component={Landing} />
-          <PrivateRoute exact path="/assessments" component={Assessments} />
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/assessments" component={Assessments} />
           <Route exact path="/login" render={() => <Login />} />
         </Switch>
       </BrowserRouter>
