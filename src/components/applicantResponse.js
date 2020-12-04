@@ -27,10 +27,19 @@ export default function ApplicantResponse(props) {
   useEffect(() => {
     // DO NOT DELETE
     pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
-    console.log('applicantResponse', props)
-  }, [])
+    //console.log('applicant', props.hacker)
+    if( props.hacker.hasOwnProperty('skills') 
+    && props.hacker.skills.hasOwnProperty('longAnswers') 
+    && Object.keys(props.hacker.skills.longAnswers).length > 1) {
+      setUserHasData(true) 
+    } else {
+      setUserHasData(false)
+    }
+  }, [props])
 
   const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
+  const [userHasData, setUserHasData] = useState(false)
+
 
   return (
     <Main>
@@ -50,25 +59,31 @@ export default function ApplicantResponse(props) {
   )
 
   function OverviewTab() {
-    return (
-      <>
-        <ResponseInput label="Is this your first hackathon?" response="yes" />
-        <ResponseInput label="GitHub/GitLab/BitBucket" response="https://github.com/yungalyx" />
-        <ResponseInput label="Personal Site" response="yes" />
-        <ResponseInput
-          label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
-          response={props.hacker.skills.longAnswer.interest}
-        />
-        <ResponseInput
-          label="What can you teach others at nwHacks? (It can be a specific skill, technology, or an area of domain knowledge)."
-          response={props.hacker.skills.longAnswer.teach}
-        />
-        <ResponseInput
-          label="Tell us about a recent project you've worked on that you're proud of! It doesn't have to be a technical project."
-          response={props.hacker.skills.longAnswer.pride}
-        />
-      </>
-    )
+    if (userHasData) {
+      return (
+        <>
+          <ResponseInput label="Is this your first hackathon?" response={props.hacker.skills.longAnswers[0]} />
+          <ResponseInput label="GitHub/GitLab/BitBucket" response="https://github.com/yungalyx" />
+          <ResponseInput label="Personal Site" response="yes" />
+          <ResponseInput
+            label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
+            response={props.hacker.skills.longAnswers.interest}
+          />
+          <ResponseInput
+            label="What can you teach others at nwHacks? (It can be a specific skill, technology, or an area of domain knowledge)."
+            response={props.hacker.skills.longAnswers.teach}
+          />
+          <ResponseInput
+            label="Tell us about a recent project you've worked on that you're proud of! It doesn't have to be a technical project."
+            response={props.hacker.skills.longAnswers.passion}
+          />
+        </>
+      )
+    } else {
+      return (<div>
+        Selected user has missing data in their application.
+      </div>)
+    }
   }
 
   function ResumeTab(props) {

@@ -32,3 +32,11 @@ export const getAllApplicants = async website => {
   })
   return applicants
 }
+
+export const updateApplicantScore = async (website, applicantID, object) =>{
+  db.collection('Hackathons')
+    .doc(website) // hardcode for event
+    .collection('Applicants')
+    .doc(applicantID)
+    .update(object)
+}

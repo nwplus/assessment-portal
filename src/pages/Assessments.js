@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import testPDf from '../assets/testResume.pdf'
-import Table from '../components/table'
+import Table from '../components/Table'
 import ToolBar from '../components/toolbar'
 import { getAllApplicants } from '../utility/firebase'
 
@@ -84,10 +84,16 @@ export default function Assessments() {
 
   const loadFirebase = async () => {
     const data = await getAllApplicants('LHD2021')
+    // trying to move the userID (key) into values side
+      
+    for (const key in data) {
+      data[key].firebaseID = key
+    }
     const arr = Object.values(data)
     setHackers(arr)
     setDisplayedHackers(arr)
     console.log(arr)
+  
   }
 
   useEffect(() => {
