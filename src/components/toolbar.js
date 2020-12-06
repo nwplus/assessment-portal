@@ -7,7 +7,7 @@ import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
 
 const ToolBarContainer = styled.div`
-  height: 69px;
+  height: 12vh;
   width: 100%;
   background: ${COLOR.TOOLBAR_GRAY};
   display: flex;

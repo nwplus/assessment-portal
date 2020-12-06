@@ -9,10 +9,18 @@ import { Document, Page, pdfjs } from 'react-pdf'
 
 const Main = styled.div`
   padding: 20px;
-  max-width: 30%;
+  max-width: 33%;
   border: 1px solid gray;
-  margin-right: 30px;
   text-align: left;
+`
+
+const TabContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
+  border-bottom: 1px gray solid;
+  width: 100%
+
 `
 
 const Tab = styled.div`
@@ -43,11 +51,11 @@ export default function ApplicantResponse(props) {
 
   return (
     <Main>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <TabContainer>
         <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Overview </Tab>
         <Tab onClick={() => setActiveTab(TABS.RESUME)}> Resume </Tab>
         <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments </Tab>
-      </div>
+      </TabContainer>
       {activeTab === TABS.OVERVIEW ? (
         <OverviewTab> </OverviewTab>
       ) : activeTab === TABS.RESUME ? (
@@ -61,7 +69,7 @@ export default function ApplicantResponse(props) {
   function OverviewTab() {
     if (userHasData) {
       return (
-        <>
+        <div style={{paddingTop: "10px"}}>
           <ResponseInput label="Is this your first hackathon?" response={props.hacker.skills.longAnswers[0]} />
           <ResponseInput label="GitHub/GitLab/BitBucket" response="https://github.com/yungalyx" />
           <ResponseInput label="Personal Site" response="yes" />
@@ -77,7 +85,7 @@ export default function ApplicantResponse(props) {
             label="Tell us about a recent project you've worked on that you're proud of! It doesn't have to be a technical project."
             response={props.hacker.skills.longAnswers.passion}
           />
-        </>
+        </div>
       )
     } else {
       return (<div>
