@@ -7,7 +7,6 @@ import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
 
 const ToolBarContainer = styled.div`
-  height: 12vh;
   width: 100%;
   background: ${COLOR.TOOLBAR_GRAY};
   display: flex;
@@ -68,11 +67,12 @@ const FilterIcon = styled.img`
 export default function ToolBar(props) {
   const [isDescending, setIsDescending] = useState(false)
 
+  // search by name (currently does not support search by email)
   const handleSearch = event => {
     const value = event.target.value
     props.setDisplayedHackers(
       props.hackers.filter(hacker => {
-        const fullName = `${hacker.basicInfo.fname} ${hacker.basicInfo.lname}`
+        const fullName = `${hacker.basicInfo.firstName} ${hacker.basicInfo.lastName}`
         return fullName.toLowerCase().includes(value.toLowerCase().trim())
       })
     )
@@ -82,6 +82,8 @@ export default function ToolBar(props) {
     const value = event.target.value
     const temp = [...props.hackers]
     temp.sort((hackerOne, hackerTwo) => {
+      hackerOne = hackerOne['basicInfo']
+      hackerTwo = hackerTwo['basicInfo']
       switch (value) {
         case SORT.LAST_NAME:
           return hackerOne['lastName'].localeCompare(hackerTwo['lastName'])
