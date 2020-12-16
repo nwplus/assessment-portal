@@ -20,23 +20,28 @@ export default app
 export const db = firebase.firestore()
 export const storage = firebase.storage()
 
-export const getAllApplicants = async website => {
-  const refs = await db
-    .collection('Hackathons')
-    .doc(website) // hardcode for event
-    .collection('Applicants')
-    .get()
-  const applicants = {}
-  refs.docs.forEach(doc => {
-    applicants[doc.id] = doc.data()
-  })
-  return applicants
+export const getAllApplicants = async (website, callback) => {
+  return (
+    db
+      .collection('Hackathons')
+      .doc(website) // hardcode for event
+      .collection('Applicants')
+      //.where('submission.submitted', '==', true)
+      .onSnapshot(snap => {
+        callback(snap.docs.map(doc => doc.data()))
+      })
+  )
 }
 
-export const updateApplicantScore = async (website, applicantID, object) =>{
+export const updateApplicantScore = async (website, applicantID, object) => {
   db.collection('Hackathons')
     .doc(website) // hardcode for event
     .collection('Applicants')
     .doc(applicantID)
     .update(object)
+}
+
+export const getResumeFile = async userId => {
+  const ref = storage.ref(`applicantResumes/${userId}`)
+  return await ref.getDownloadURL()
 }

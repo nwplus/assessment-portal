@@ -1,69 +1,72 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import testPDf from '../assets/testResume.pdf'
 import Table from '../components/Table'
 import ToolBar from '../components/toolbar'
-import app, { getAllApplicants } from '../utility/firebase'
+import { SORT } from '../constants'
+import { getAllApplicants } from '../utility/firebase'
+
+const sort = (arr, type) => {
+  switch (type) {
+    case SORT.LAST_NAME:
+      return arr.sort((a, b) => {
+        return a.basicInfo.firstName?.localeCompare(b.basicInfo.firstName ?? '')
+      })
+    case SORT.FIRST_NAME:
+      return arr.sort((a, b) => {
+        return a.basicInfo.lastName?.localeCompare(b.basicInfo.lastName ?? '')
+      })
+    default:
+    case SORT.TIMESTAMP:
+      return arr.sort((a, b) => {
+        return a.submission?.lastUpdated - b.submission?.lastUpdated
+      })
+  }
+}
 
 export default function Assessments() {
   const [hackers, setHackers] = useState([])
 
   // displayedHackers is what is displayed to users with search/filter/sort
   const [displayedHackers, setDisplayedHackers] = useState([])
-  
+
   const [selectedHacker, setSelectedHacker] = useState({})
 
-  const [loading, setLoading] = useState(true)
+  const [sortType, setSortType] = useState(SORT.FIRST_NAME)
 
-  // passing changes up from scoring component
-  const handleChangesfromScoring = (applicantID, newscore) => {
-    const i = hackers.findIndex(person => person.firebaseID === applicantID);
-    let copyHackers = [...hackers]
-    let hackerWithNewScore = {...copyHackers[i]}
-    hackerWithNewScore.score = newscore
-    copyHackers[i] = hackerWithNewScore
-    setHackers(copyHackers)
-    setDisplayedHackers(copyHackers)
-    setSelectedHacker(hackerWithNewScore)
-  }
+  const [reverse, setReverse] = useState(false)
 
-  const loadFirebase = async () => {
-    const data = await getAllApplicants('LHD2021')
-    // trying to move the userID (key) into values side
-      
-    for (const key in data) {
-      data[key].firebaseID = key
-    }
-    const arr = Object.values(data)
-    setHackers(arr)
-    setDisplayedHackers(arr)
-    // console.log(arr)
-  
-  }
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
-    setLoading(true)
-    const initializeFirebase = async () => {
-      await loadFirebase()
-      setLoading(false)
-    }
-    initializeFirebase()
+    getAllApplicants('nwHacks2021', setHackers)
   }, [])
+
+  useEffect(() => {
+    let newHackers = sort(hackers, sortType)
+    if (reverse) {
+      newHackers = newHackers.reverse()
+    }
+    if (search !== '') {
+      newHackers = newHackers.filter(hacker => {
+        return (
+          hacker.basicInfo.lastName?.includes(search) ||
+          hacker.basicInfo.firstName?.includes(search) ||
+          hacker.basicInfo.email?.includes(search)
+        )
+      })
+    }
+    setDisplayedHackers(newHackers)
+  }, [hackers, sortType, search])
 
   return (
     <div>
-      {!loading && (
+      {hackers && (
         <>
-          <ToolBar
-            hackers={hackers}
-            setDisplayedHackers={setDisplayedHackers}
-            displayedHackers={displayedHackers}
-          />
+          <ToolBar search={setSearch} reverse={setReverse} sort={setSortType} reversed={reverse} />
           <Table
             displayedHackers={displayedHackers}
             selectedHacker={selectedHacker}
             setSelectedHacker={setSelectedHacker}
-            handleChangesfromScoring={handleChangesfromScoring}
           />
         </>
       )}
