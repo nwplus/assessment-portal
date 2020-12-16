@@ -6,6 +6,7 @@ import ResponseInput from './responseInput'
 import { COLOR, TABS } from '../constants'
 import { render } from '@testing-library/react'
 import { Document, Page, pdfjs } from 'react-pdf'
+import { getResumeFile } from '../utility/firebase'
 
 const Main = styled.div`
   padding: 20px;
@@ -19,8 +20,7 @@ const TabContainer = styled.div`
   flex-direction: row;
   padding-bottom: 15px;
   border-bottom: 1px gray solid;
-  width: 100%
-
+  width: 100%;
 `
 
 const Tab = styled.div`
@@ -36,10 +36,12 @@ export default function ApplicantResponse(props) {
     // DO NOT DELETE
     pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
     //console.log('applicant', props.hacker)
-    if( props.hacker.hasOwnProperty('skills') 
-    && props.hacker.skills.hasOwnProperty('longAnswers') 
-    && Object.keys(props.hacker.skills.longAnswers).length > 1) {
-      setUserHasData(true) 
+    if (
+      props.hacker.hasOwnProperty('skills') &&
+      props.hacker.skills.hasOwnProperty('longAnswers') &&
+      Object.keys(props.hacker.skills.longAnswers).length > 1
+    ) {
+      setUserHasData(true)
     } else {
       setUserHasData(false)
     }
@@ -47,7 +49,6 @@ export default function ApplicantResponse(props) {
 
   const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
   const [userHasData, setUserHasData] = useState(false)
-
 
   return (
     <Main>
@@ -59,7 +60,7 @@ export default function ApplicantResponse(props) {
       {activeTab === TABS.OVERVIEW ? (
         <OverviewTab> </OverviewTab>
       ) : activeTab === TABS.RESUME ? (
-        <ResumeTab pdf={props.hacker.skills.resume}></ResumeTab>
+        <ResumeTab hacker={props.hacker}></ResumeTab>
       ) : (
         <CommentTab comments={props.hacker.comments}></CommentTab>
       )}
@@ -69,9 +70,12 @@ export default function ApplicantResponse(props) {
   function OverviewTab() {
     if (userHasData) {
       return (
-        <div style={{paddingTop: "10px"}}>
-          <ResponseInput label="Is this your first hackathon?" response={props.hacker.skills.longAnswers[0]} />
-          <ResponseInput label="GitHub/GitLab/BitBucket" response="https://github.com/yungalyx" />
+        <div style={{ paddingTop: '10px' }}>
+          <ResponseInput
+            label="Is this your first hackathon?"
+            response={props.hacker.skills.longAnswers[0]}
+          />
+          <ResponseInput label="GitHub/GitLab/BitBucket" response={props.hacker.skills.github} />
           <ResponseInput label="Personal Site" response="yes" />
           <ResponseInput
             label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
@@ -88,17 +92,31 @@ export default function ApplicantResponse(props) {
         </div>
       )
     } else {
-      return (<div>
-        Selected user has missing data in their application.
-      </div>)
+      return <div>Selected user has missing data in their application.</div>
     }
   }
 
   function ResumeTab(props) {
-    return (
-      <Document file={{ url: 'gs://nwplus-ubc-dev.appspot.com/applicantResumes/testResume.pdf' }}>
-        <Page pageNumber={1} />
-      </Document>
+    const [file, setFile] = useState(null)
+    const [url, setURL] = useState(null)
+    useEffect(() => {
+      getResumeFile(props.hacker._id).then(async url => {
+        setURL(url)
+        // const data = await fetch(url)
+        // const file = await data.blob()
+        // setFile(file)
+      })
+    }, [props.hacker])
+
+    return !url ? (
+      <>Loading</>
+    ) : (
+      <a target="_blank" href={url}>
+        Resume Link
+      </a>
+      // <Document file={file}>
+      //   <Page pageNumber={1} />
+      // </Document>
     )
   }
 
