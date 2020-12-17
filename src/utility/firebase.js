@@ -25,7 +25,7 @@ export const getAllApplicants = async (website, callback) => {
     .collection('Hackathons')
     .doc(website) // hardcode for event
     .collection('Applicants')
-    .where('submission.submitted', '==', true)
+    .where('status.applicationStatus', '==', 'applied')
     .onSnapshot(snap => {
       callback(snap.docs.map(doc => doc.data()))
     })
