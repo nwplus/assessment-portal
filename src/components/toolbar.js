@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { COLOR, SORT } from '../constants'
-import { useState } from 'react'
 import Arrow from '../assets/arrow.svg'
 import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'

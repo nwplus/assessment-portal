@@ -42,7 +42,7 @@ export default function ApplicantScore(props) {
       })
       setHasScore(false)
     }
-  }, [props])
+  }, [hacker])
 
   const handleClick = async (value, label) => {
     switch (label) {

@@ -56,14 +56,14 @@ export default function Assessments() {
       })
     }
     setDisplayedHackers(newHackers)
-  }, [hackers, sortType, search])
+  }, [hackers, sortType, search, reverse])
 
   useEffect(() => {
     if (!selectedHacker) return
     const hackerId = selectedHacker._id
     const newHacker = hackers.find(h => h._id === hackerId)
     if (newHacker) setSelectedHacker(newHacker)
-  }, [hackers])
+  }, [hackers, selectedHacker])
 
   return (
     <div>

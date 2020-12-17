@@ -131,14 +131,14 @@ export default function ApplicantResponse(props) {
           setFile(fileURL)
         })
         .catch(() => setNoResume(true))
-    }, [hacker])
+    }, [])
 
     return !file && noResume === false ? (
       <>Loading</>
     ) : noResume ? (
       <div>No resume</div>
     ) : (
-      <a href={file} target="_blank">
+      <a href={file} target="_blank" rel="noopener noreferrer">
         View Resume
       </a>
     )

@@ -12,7 +12,7 @@ export const Auth = ({ children }) => {
       setUser(user)
       history.push('/assessments')
     })
-  }, [])
+  }, [history])
 
   return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
 }
