@@ -42,20 +42,7 @@ const ExitTab = styled.div`
 
 export default function ApplicantResponse(props) {
   const { hacker } = props
-  useEffect(() => {
-    if (
-      props.hacker.hasOwnProperty('skills') &&
-      props.hacker.skills.hasOwnProperty('longAnswers') &&
-      Object.keys(props.hacker.skills.longAnswers).length > 1
-    ) {
-      setUserHasData(true)
-    } else {
-      setUserHasData(false)
-    }
-  }, [props])
-
   const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
-  const [userHasData, setUserHasData] = useState(false)
 
   return (
     <Main>
@@ -76,47 +63,41 @@ export default function ApplicantResponse(props) {
   )
 
   function OverviewTab() {
-    if (userHasData) {
-      return (
-        <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
-          <ResponseInput
-            label="Full name"
-            response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
-          />
-          <ResponseInput label="Email" response={hacker.basicInfo?.email} />
-          <ResponseInput label="Role" response={hacker.basicInfo?.contributionRole} />
-          <ResponseInput
-            label="19 or over?"
-            response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
-          />
-          <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.major}`} />
-          <ResponseInput label="Major" response={hacker.basicInfo?.school} />
-          <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
-          <ResponseInput
-            label="Hackathons Attended"
-            response={hacker.basicInfo.hackathonsAttended}
-          />
-          <ResponseInput
-            label="Last Updated"
-            response={moment(hacker.submission?.lastUpdated.toDate()).format(
-              'dddd, MMMM Do, YYYY h:mm:ss A'
-            )}
-          />
-        </div>
-      )
-    } else {
-      return <div>Selected user has missing data in their application.</div>
-    }
+    return (
+      <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
+        <ResponseInput
+          label="Full name"
+          response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
+        />
+        <ResponseInput label="Email" response={hacker.basicInfo?.email} />
+        <ResponseInput label="Role" response={hacker.basicInfo?.contributionRole} />
+        <ResponseInput
+          label="19 or over?"
+          response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
+        />
+        <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.major}`} />
+        <ResponseInput label="Major" response={hacker.basicInfo?.school} />
+        <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
+        <ResponseInput label="Hackathons Attended" response={hacker.basicInfo.hackathonsAttended} />
+        <ResponseInput
+          label="Last Updated"
+          response={moment(hacker.submission?.lastUpdated.toDate()).format(
+            'dddd, MMMM Do, YYYY h:mm:ss A'
+          )}
+        />
+      </div>
+    )
   }
 
   function ResumeTab() {
     return (
       <div style={{ paddingTop: '10px' }}>
         <ResponseInput label="Resume" response={ResumeLink()} />
-        <ResponseInput label="GitHub/GitLab/BitBucket" response={hacker.skills?.github} />
-        <ResponseInput label="LinkedIn" response={hacker.skills?.linkedin} />
-        <ResponseInput label="Portfolio" response={hacker.skills?.portfolio} />
+        <ResponseInput url label="GitHub/GitLab/BitBucket" response={hacker.skills?.github} />
+        <ResponseInput url label="LinkedIn" response={hacker.skills?.linkedin} />
+        <ResponseInput url label="Portfolio" response={hacker.skills?.portfolio} />
         <ResponseInput
+          openable
           label={
             <div>
               Long answers which are either
