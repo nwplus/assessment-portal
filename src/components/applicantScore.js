@@ -1,9 +1,10 @@
 // this is the second side bar for the scoringPage
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import ScoreInput from './scoreInput'
 import { updateApplicantScore } from '../utility/firebase'
-import { COLOR } from '../constants'
+import { AuthContext } from '../utility/auth'
+import moment from 'moment'
 
 const Main = styled.div`
   padding: 0px 20px;
@@ -21,6 +22,8 @@ export default function ApplicantScore(props) {
   const { hacker } = props
   const [hasScore, setHasScore] = useState(false)
 
+  const { user } = useContext(AuthContext)
+
   const [score, setScore] = useState({
     WebsiteScore: null,
     ResumeScore: null,
@@ -28,8 +31,8 @@ export default function ApplicantScore(props) {
   })
 
   useEffect(() => {
-    if (hacker.hasOwnProperty('score')) {
-      setScore(hacker.score)
+    if (hacker?.score?.scores) {
+      setScore(hacker.score.scores)
       setHasScore(true)
     } else {
       setScore({
@@ -44,29 +47,43 @@ export default function ApplicantScore(props) {
   const handleClick = async (value, label) => {
     switch (label) {
       case 'Github/Personal Website':
-        await updateApplicantScore('nwHacks2021', props.hacker._id, {
-          ...score,
-          WebsiteScore: value,
-        })
+        await updateApplicantScore(
+          'nwHacks2021',
+          props.hacker._id,
+          {
+            ...score,
+            WebsiteScore: value,
+          },
+          user.email
+        )
         break
       case 'Resume/LinkedIn':
-        await updateApplicantScore('nwHacks2021', props.hacker._id, {
-          ...score,
-          ResumeScore: value,
-        })
+        await updateApplicantScore(
+          'nwHacks2021',
+          props.hacker._id,
+          {
+            ...score,
+            ResumeScore: value,
+          },
+          user.email
+        )
         break
       case 'Written Response Score':
-        await updateApplicantScore('nwHacks2021', props.hacker._id, {
-          ...score,
-          ResponseScore: value,
-        })
+        await updateApplicantScore(
+          'nwHacks2021',
+          props.hacker._id,
+          {
+            ...score,
+            ResponseScore: value,
+          },
+          user.email
+        )
         break
       default:
         alert('Error!')
         break
     }
   }
-
   return (
     <div>
       <Main>
@@ -85,7 +102,15 @@ export default function ApplicantScore(props) {
       </Main>
       {hasScore && (
         <Summary>
-          <label> Total Score: {score.totalScore}/15 </label>
+          <label> Total Score: {hacker.score.totalScore}/15 </label>
+          <br />
+          <label> Last updated by: {hacker.score.lastUpdatedBy}</label>
+          <br />
+          <label>
+            {' '}
+            at: {moment(hacker.score.lastUpdated.toDate()).format('dddd, MMMM Do, YYYY h:mm:ss A')}
+          </label>
+          <br />
         </Summary>
       )}
     </div>

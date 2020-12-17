@@ -34,13 +34,12 @@ export const getAllApplicants = async (website, callback) => {
 }
 
 function calculateTotalScore(hackerScore) {
-  delete hackerScore.totalScore
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue
   return Object.values(hackerScore).reduce(reducer)
 }
 
-export const updateApplicantScore = async (website, applicantID, object) => {
+export const updateApplicantScore = async (website, applicantID, object, adminEmail) => {
   const totalScore = calculateTotalScore(object)
   console.log(object)
   console.log(totalScore)
@@ -50,8 +49,12 @@ export const updateApplicantScore = async (website, applicantID, object) => {
     .doc(applicantID)
     .update({
       score: {
-        ...object,
+        scores: {
+          ...object,
+        },
         totalScore,
+        lastUpdated: firebase.firestore.Timestamp.now(),
+        lastUpdatedBy: adminEmail,
       },
     })
 }
