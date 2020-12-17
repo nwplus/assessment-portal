@@ -48,10 +48,10 @@ export default function Assessments() {
     }
     if (search !== '') {
       newHackers = newHackers.filter(hacker => {
+        const name = `${hacker.basicInfo.firstName?.toLocaleLowerCase()} ${hacker.basicInfo.lastName?.toLocaleLowerCase()}`
         return (
-          hacker.basicInfo.lastName?.includes(search) ||
-          hacker.basicInfo.firstName?.includes(search) ||
-          hacker.basicInfo.email?.includes(search)
+          name.includes(search.toLocaleLowerCase()) ||
+          hacker.basicInfo.email?.toLocaleLowerCase().includes(search.toLocaleLowerCase())
         )
       })
     }
