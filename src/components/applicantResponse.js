@@ -11,6 +11,8 @@ const Main = styled.div`
   max-width: 33%;
   border: 1px solid gray;
   text-align: left;
+  overflow-y: scroll;
+  height: 85vh;
 `
 
 const TabContainer = styled.div`
