@@ -80,6 +80,7 @@ export default function Table(props) {
     props.setSelectedHacker(hacker)
   }
 
+
   function Row(rowProp) {
     return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
       <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
@@ -92,7 +93,7 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{totalScore(rowProp.hacker.score)}/10</Scored>
+            <Scored>{totalScore(rowProp.hacker.score)}/20</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -109,7 +110,7 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{totalScore(rowProp.hacker.score)}/10</Scored>
+            <Scored>{totalScore(rowProp.hacker.score)}/20</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -119,15 +120,15 @@ export default function Table(props) {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
+    <div style={{ display: 'flex'}}>
+      <div style={{ flex: 1, overflowY: "auto", height:"88vh" }}>
         {props.displayedHackers.map((hacker, index) => {
           return <Row key={hacker.basicInfo.email} hacker={hacker} index={index} />
         })}
       </div>
       {Object.keys(selectedHacker).length !== 0 ? (
         <React.Fragment>
-          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
+          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} passingUpScore={props.handleChangesfromScoring} />
           <ApplicantResponse hacker={selectedHacker} style={{ flex: 1 }} />
         </React.Fragment>
       ) : (
