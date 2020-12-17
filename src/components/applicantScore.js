@@ -102,13 +102,13 @@ export default function ApplicantScore(props) {
       </Main>
       {hasScore && (
         <Summary>
-          <label> Total Score: {hacker.score.totalScore}/15 </label>
+          <label> Total Score: {hacker.score?.totalScore}/15 </label>
           <br />
-          <label> Last updated by: {hacker.score.lastUpdatedBy}</label>
+          <label> Last updated by: {hacker.score?.lastUpdatedBy}</label>
           <br />
           <label>
             {' '}
-            at: {moment(hacker.score.lastUpdated.toDate()).format('dddd, MMMM Do, YYYY h:mm:ss A')}
+            at: {moment(hacker.score?.lastUpdated.toDate()).format('dddd, MMMM Do, YYYY h:mm:ss A')}
           </label>
           <br />
         </Summary>
