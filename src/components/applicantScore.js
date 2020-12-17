@@ -26,7 +26,6 @@ export default function ApplicantScore(props) {
   const { user } = useContext(AuthContext)
 
   const [score, setScore] = useState({
-    WebsiteScore: null,
     ResumeScore: null,
     ResponseScore: null,
   })
@@ -37,7 +36,6 @@ export default function ApplicantScore(props) {
       setHasScore(true)
     } else {
       setScore({
-        WebsiteScore: null,
         ResumeScore: null,
         ResponseScore: null,
       })
