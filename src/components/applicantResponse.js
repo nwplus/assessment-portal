@@ -31,6 +31,14 @@ const Tab = styled.div`
     cursor: pointer;
   }
 `
+const ExitTab = styled.div`
+  color: grey;
+  margin-left: auto;
+  :hover {
+    color: ${COLOR.BLUE_TEXT};
+    cursor: pointer;
+  }
+`
 
 export default function ApplicantResponse(props) {
   const { hacker } = props
@@ -55,6 +63,7 @@ export default function ApplicantResponse(props) {
         <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Basic Info </Tab>
         <Tab onClick={() => setActiveTab(TABS.RESUME)}> Skills </Tab>
         <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments(WIP) </Tab>
+        <ExitTab onClick={() => props.setSelectedHacker({})}> X </ExitTab>
       </TabContainer>
       {activeTab === TABS.OVERVIEW ? (
         <OverviewTab> </OverviewTab>

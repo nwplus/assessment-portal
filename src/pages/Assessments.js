@@ -48,6 +48,18 @@ export default function Assessments() {
   }, [])
 
   useEffect(() => {
+    const escFunction = ({ keyCode }) => {
+      if (keyCode === 27) {
+        setSelectedHacker({})
+      }
+    }
+    document.addEventListener('keyup', escFunction, false)
+    return () => {
+      document.removeEventListener('keyup', escFunction, false)
+    }
+  })
+
+  useEffect(() => {
     let newHackers = sort(hackers, sortType)
     if (reverse) {
       newHackers = newHackers.reverse()

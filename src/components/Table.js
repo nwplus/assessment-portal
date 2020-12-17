@@ -126,7 +126,11 @@ export default function Table(props) {
       {Object.keys(selectedHacker).length !== 0 ? (
         <React.Fragment>
           <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
-          <ApplicantResponse hacker={selectedHacker} style={{ flex: 1 }} />
+          <ApplicantResponse
+            setSelectedHacker={props.setSelectedHacker}
+            hacker={selectedHacker}
+            style={{ flex: 1 }}
+          />
         </React.Fragment>
       ) : (
         <div></div>
