@@ -8,7 +8,7 @@ export const Auth = ({ children }) => {
   const history = useHistory()
 
   useEffect(() => {
-    app.auth().onAuthStateChanged(user => {
+    return app.auth().onAuthStateChanged(user => {
       setUser(user)
       history.push('/assessments')
     })
