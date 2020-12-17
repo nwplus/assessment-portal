@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import ResponseInput from './responseInput'
 import { COLOR, TABS } from '../constants'
-import { render } from '@testing-library/react'
-import { Document, Page, pdfjs } from 'react-pdf'
 import { getResumeFile } from '../utility/firebase'
 
 const Main = styled.div`
@@ -32,9 +30,10 @@ const Tab = styled.div`
 `
 
 export default function ApplicantResponse(props) {
+  const { hacker } = props
   useEffect(() => {
     // DO NOT DELETE
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+    // pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
     //console.log('applicant', props.hacker)
     if (
       props.hacker.hasOwnProperty('skills') &&
@@ -53,14 +52,14 @@ export default function ApplicantResponse(props) {
   return (
     <Main>
       <TabContainer>
-        <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Overview </Tab>
-        <Tab onClick={() => setActiveTab(TABS.RESUME)}> Resume </Tab>
-        <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments </Tab>
+        <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Basic Info </Tab>
+        <Tab onClick={() => setActiveTab(TABS.RESUME)}> Skills </Tab>
+        <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments(WIP) </Tab>
       </TabContainer>
       {activeTab === TABS.OVERVIEW ? (
         <OverviewTab> </OverviewTab>
       ) : activeTab === TABS.RESUME ? (
-        <ResumeTab hacker={props.hacker}></ResumeTab>
+        <ResumeTab />
       ) : (
         <CommentTab comments={props.hacker.comments}></CommentTab>
       )}
@@ -72,22 +71,23 @@ export default function ApplicantResponse(props) {
       return (
         <div style={{ paddingTop: '10px' }}>
           <ResponseInput
-            label="Is this your first hackathon?"
-            response={props.hacker.skills.longAnswers[0]}
+            label="Full name"
+            response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
           />
-          <ResponseInput label="GitHub/GitLab/BitBucket" response={props.hacker.skills.github} />
-          <ResponseInput label="Personal Site" response="yes" />
+          <ResponseInput label="Email" response={hacker.basicInfo?.email} />
+          <ResponseInput label="Role" response={hacker.basicInfo?.contributionRole} />
           <ResponseInput
-            label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
-            response={props.hacker.skills.longAnswers.interest}
-          />
-          <ResponseInput
-            label="What can you teach others at nwHacks? (It can be a specific skill, technology, or an area of domain knowledge)."
-            response={props.hacker.skills.longAnswers.teach}
+            label="19 or over?"
+            response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
           />
           <ResponseInput
-            label="Tell us about a recent project you've worked on that you're proud of! It doesn't have to be a technical project."
-            response={props.hacker.skills.longAnswers.passion}
+            label="School/Major"
+            response={`Studying ${hacker.basicInfo?.major} at ${hacker.basicInfo?.school}`}
+          />
+          <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
+          <ResponseInput
+            label="Hackathons Attended"
+            response={hacker.basicInfo.hackathonsAttended}
           />
         </div>
       )
@@ -96,27 +96,52 @@ export default function ApplicantResponse(props) {
     }
   }
 
-  function ResumeTab(props) {
-    const [file, setFile] = useState(null)
-    const [url, setURL] = useState(null)
-    useEffect(() => {
-      getResumeFile(props.hacker._id).then(async url => {
-        setURL(url)
-        // const data = await fetch(url)
-        // const file = await data.blob()
-        // setFile(file)
-      })
-    }, [props.hacker])
+  function ResumeTab() {
+    return (
+      <div style={{ paddingTop: '10px' }}>
+        <ResponseInput label="Resume" response={ResumeLink()} />
+        <ResponseInput label="GitHub/GitLab/BitBucket" response={hacker.skills?.github} />
+        <ResponseInput label="LinkedIn" response={hacker.skills?.linkedin} />
+        <ResponseInput label="Portfolio" response={hacker.skills?.portfolio} />
+        <ResponseInput
+          label={
+            <div>
+              Long answers which are either
+              <br />
+              1. Describe how you became interested in the world of technology and where you hope to
+              go from here on out!
+              <br />
+              2. How would you like to challenge yourself during this hackathon?
+            </div>
+          }
+          response={props.hacker.skills.longAnswers}
+        />
+      </div>
+    )
+  }
 
-    return !url ? (
+  function ResumeLink() {
+    const [file, setFile] = useState(null)
+    const [noResume, setNoResume] = useState(false)
+    useEffect(() => {
+      getResumeFile(hacker._id)
+        .then(async url => {
+          const data = await fetch(url)
+          const file = await data.blob()
+          const fileURL = URL.createObjectURL(file)
+          setFile(fileURL)
+        })
+        .catch(() => setNoResume(true))
+    }, [hacker])
+
+    return !file && noResume === false ? (
       <>Loading</>
+    ) : noResume ? (
+      <div>No resume</div>
     ) : (
-      <a target="_blank" href={url}>
-        Resume Link
+      <a href={file} target="_blank">
+        View Resume
       </a>
-      // <Document file={file}>
-      //   <Page pageNumber={1} />
-      // </Document>
     )
   }
 
@@ -130,7 +155,7 @@ export default function ApplicantResponse(props) {
         </div>
       )
     } else {
-      return <div> got nothing fam </div>
+      return <div> WIP </div>
     }
   }
 
