@@ -14,6 +14,8 @@ export default function PopoutWindow({ children, setWindowClosed, title }) {
       extWindow.addEventListener('beforeunload', () => {
         setWindowClosed()
       })
+    } else {
+      setWindowClosed()
     }
     setContainerElement(containerEle)
     return () => {

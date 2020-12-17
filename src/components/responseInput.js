@@ -7,7 +7,6 @@ export default function ResponseInput({ url, label, response, openable }) {
   const OpenButton = () => (
     <div style={{ textAlign: 'center' }}>
       <button
-        style={{ backgroundColor: 'darkGrey' }}
         onClick={() => {
           setOpen(!open)
         }}
