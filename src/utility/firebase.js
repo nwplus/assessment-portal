@@ -33,12 +33,27 @@ export const getAllApplicants = async (website, callback) => {
   )
 }
 
+function calculateTotalScore(hackerScore) {
+  delete hackerScore.totalScore
+  // summing up values score
+  const reducer = (accumulator, currentValue) => accumulator + currentValue
+  return Object.values(hackerScore).reduce(reducer)
+}
+
 export const updateApplicantScore = async (website, applicantID, object) => {
+  const totalScore = calculateTotalScore(object)
+  console.log(object)
+  console.log(totalScore)
   db.collection('Hackathons')
     .doc(website) // hardcode for event
     .collection('Applicants')
     .doc(applicantID)
-    .update(object)
+    .update({
+      score: {
+        ...object,
+        totalScore,
+      },
+    })
 }
 
 export const getResumeFile = async userId => {
