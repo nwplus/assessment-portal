@@ -34,9 +34,6 @@ const Tab = styled.div`
 export default function ApplicantResponse(props) {
   const { hacker } = props
   useEffect(() => {
-    // DO NOT DELETE
-    // pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
-    //console.log('applicant', props.hacker)
     if (
       props.hacker.hasOwnProperty('skills') &&
       props.hacker.skills.hasOwnProperty('longAnswers') &&
