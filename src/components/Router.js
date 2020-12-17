@@ -14,7 +14,6 @@ export default function Router() {
     <BrowserRouter>
       <Auth>
         <Switch>
-          <PrivateRoute exact path="/" component={Landing} />
           <PrivateRoute exact path="/assessments" component={Assessments} />
           <Route exact path="/login" render={() => <Login />} />
         </Switch>

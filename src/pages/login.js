@@ -71,16 +71,16 @@ function Login() {
       const user = await firebase.auth().currentUser
       const isAdmin = await checkAdminClaim(user)
       if (isAdmin) {
-        history.push('/')
+        history.push('/assessments')
       } else {
         const res = await setAdmin()
         if (res.data.isAdmin) {
           await user.getIdToken(true)
           setUser(user)
-          history.push('/')
+          history.push('/assessments')
         } else {
           await firebase.auth().signOut()
-          history.push('/')
+          history.push('/assessments')
           setIsAddingClaim(false)
           setShowError(true)
         }
