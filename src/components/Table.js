@@ -116,9 +116,23 @@ export default function Table(props) {
     )
   }
 
+  const AllHackersRow = () => {
+    return (
+      <UnselectedRowDiv>
+        <div style={styles.nameEmailContainer}>
+          <UnselectedName>
+            {props.displayedHackers.length}{' '}
+            {props.displayedHackers.length === 1 ? 'Hacker' : 'Hackers'}
+          </UnselectedName>
+        </div>
+      </UnselectedRowDiv>
+    )
+  }
+
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ flex: 1, overflowY: 'auto', height: '88vh' }}>
+        <AllHackersRow />
         {props.displayedHackers.map((hacker, index) => {
           return <Row key={hacker.basicInfo.email} hacker={hacker} index={index} />
         })}
