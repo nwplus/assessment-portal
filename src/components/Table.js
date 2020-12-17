@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR } from '../constants'
+import { COLOR, MAX_SCORE } from '../constants'
 import ApplicantResponse from './applicantResponse'
 import ApplicantScore from './applicantScore'
 
@@ -86,9 +86,11 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{rowProp.hacker.score.totalScore ?? '?'}/15</Scored>
+            <Scored>
+              {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+            </Scored>
           ) : (
-            <Unscored>/10</Unscored>
+            <Unscored>/{MAX_SCORE}</Unscored>
           )}
         </div>
       </SelectedRowDiv>
@@ -103,9 +105,11 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{rowProp.hacker.score.totalScore ?? '?'}/15</Scored>
+            <Scored>
+              {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+            </Scored>
           ) : (
-            <Unscored>/10</Unscored>
+            <Unscored>/{MAX_SCORE}</Unscored>
           )}
         </div>
       </UnselectedRowDiv>

@@ -17,9 +17,9 @@ export const COLOR = {
 }
 
 export const TABS = {
-  OVERVIEW: "Overview",
-  RESUME:   "Resume",
-  COMMENTS: "Comments"
+  OVERVIEW: 'Overview',
+  RESUME: 'Resume',
+  COMMENTS: 'Comments',
 }
 
 export const SORT = {
@@ -27,3 +27,19 @@ export const SORT = {
   LAST_NAME: 'Last Name',
   FIRST_NAME: 'First Name',
 }
+
+export const MAX_SCORES = {
+  RESUME: {
+    value: 7,
+    weight: 1,
+  },
+  ESSAY: {
+    value: 3,
+    weight: 2,
+  },
+}
+
+export const MAX_SCORE = Object.values(MAX_SCORES).reduce(
+  (acc, curr) => acc + curr.value * curr.weight,
+  0
+)

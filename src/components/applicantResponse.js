@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import ResponseInput from './responseInput'
 import { COLOR, TABS } from '../constants'
 import { getResumeFile } from '../utility/firebase'
+import moment from 'moment'
 
 const Main = styled.div`
   padding: 20px;
@@ -68,7 +69,7 @@ export default function ApplicantResponse(props) {
   function OverviewTab() {
     if (userHasData) {
       return (
-        <div style={{ paddingTop: '10px' }}>
+        <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
           <ResponseInput
             label="Full name"
             response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
@@ -79,14 +80,18 @@ export default function ApplicantResponse(props) {
             label="19 or over?"
             response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
           />
-          <ResponseInput
-            label="School/Major"
-            response={`Studying ${hacker.basicInfo?.major} at ${hacker.basicInfo?.school}`}
-          />
+          <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.major}`} />
+          <ResponseInput label="Major" response={hacker.basicInfo?.school} />
           <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
           <ResponseInput
             label="Hackathons Attended"
             response={hacker.basicInfo.hackathonsAttended}
+          />
+          <ResponseInput
+            label="Last Updated"
+            response={moment(hacker.submission?.lastUpdated.toDate()).format(
+              'dddd, MMMM Do, YYYY h:mm:ss A'
+            )}
           />
         </div>
       )

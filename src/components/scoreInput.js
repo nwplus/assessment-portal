@@ -3,8 +3,12 @@
 import React from 'react'
 import Number from './numberIcon'
 
-export default function ScoreInput({ label, score, handleClick }) {
-  const arr = [...Array(6).keys()]
+export default function ScoreInput({ label, score, handleClick, maxScore }) {
+  const arr = [...Array(maxScore.value + 1).keys()]
+
+  const handleMultipier = (value, label) => {
+    return handleClick(value * maxScore.weight, label)
+  }
 
   return (
     <div style={{ paddingBottom: '12px' }}>
@@ -15,9 +19,9 @@ export default function ScoreInput({ label, score, handleClick }) {
             <Number
               label={label}
               number={num}
-              active={score === num}
+              active={score / maxScore.weight === num}
               key={num}
-              handleClick={handleClick}
+              handleClick={handleMultipier}
             />
           )
         })}

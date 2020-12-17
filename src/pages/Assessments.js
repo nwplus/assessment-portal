@@ -9,11 +9,15 @@ const sort = (arr, type) => {
   switch (type) {
     case SORT.LAST_NAME:
       return arr.sort((a, b) => {
-        return a.basicInfo.firstName?.localeCompare(b.basicInfo.firstName ?? '')
+        return a.basicInfo.lastName
+          ?.toLocaleLowerCase()
+          .localeCompare(b.basicInfo.lastName?.toLocaleLowerCase())
       })
     case SORT.FIRST_NAME:
       return arr.sort((a, b) => {
-        return a.basicInfo.lastName?.localeCompare(b.basicInfo.lastName ?? '')
+        return a.basicInfo.firstName
+          ?.toLocaleLowerCase()
+          .localeCompare(b.basicInfo.firstName?.toLocaleLowerCase())
       })
     default:
     case SORT.TIMESTAMP:
@@ -31,7 +35,7 @@ export default function Assessments() {
 
   const [selectedHacker, setSelectedHacker] = useState({})
 
-  const [sortType, setSortType] = useState(SORT.FIRST_NAME)
+  const [sortType, setSortType] = useState(SORT.TIMESTAMP)
 
   const [reverse, setReverse] = useState(false)
 
@@ -55,7 +59,7 @@ export default function Assessments() {
         )
       })
     }
-    setDisplayedHackers(newHackers)
+    setDisplayedHackers([...newHackers])
   }, [hackers, sortType, search, reverse])
 
   useEffect(() => {
