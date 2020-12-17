@@ -1,7 +1,8 @@
 {
   "hosting": {
-    "target": "assessment-portal",
     "public": "public",
+    "site": "assessment-portal",
+    "target": "assessment-portal",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
