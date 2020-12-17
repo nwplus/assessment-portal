@@ -4,6 +4,19 @@ import PopoutWindow from './PopoutWindow'
 export default function ResponseInput({ url, label, response, openable }) {
   const [open, setOpen] = useState(false)
 
+  const OpenButton = () => (
+    <div style={{ textAlign: 'center' }}>
+      <button
+        style={{ backgroundColor: 'darkGrey' }}
+        onClick={() => {
+          setOpen(!open)
+        }}
+      >
+        {open ? 'close window' : 'open in new window'}
+      </button>
+    </div>
+  )
+
   const ResponseArea = ({ fontSize }) => (
     <div
       style={{
@@ -31,16 +44,7 @@ export default function ResponseInput({ url, label, response, openable }) {
     <div>
       <h5>
         {label}
-        {openable && (
-          <a
-            href="#"
-            onClick={e => {
-              setOpen(!open)
-            }}
-          >
-            {open ? 'close window' : 'open in new window'}
-          </a>
-        )}
+        {openable && <OpenButton />}
       </h5>
       <ResponseArea />
       {open && (
