@@ -55,7 +55,7 @@ const DownArrow = styled.img`
 
 const UpArrow = styled.img`
   cursor: pointer;
-  transform: scaleY(-1);
+  transform: scale(1, -1);
 `
 
 const FilterIcon = styled.img`
@@ -86,9 +86,9 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
         </SortSelect>
       </SortContainer>
       {reversed ? (
-        <DownArrow src={Arrow} onClick={() => reverse()} />
+        <DownArrow src={Arrow} onClick={() => reverse(reverse => !reverse)} />
       ) : (
-        <UpArrow src={Arrow} onClick={() => reverse()} />
+        <UpArrow src={Arrow} onClick={() => reverse(reverse => !reverse)} />
       )}
       <FilterIcon src={Filter} />
     </ToolBarContainer>
