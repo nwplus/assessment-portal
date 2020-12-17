@@ -83,6 +83,7 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
           <option value={SORT.TIMESTAMP}>{SORT.TIMESTAMP}</option>
           <option value={SORT.LAST_NAME}>{SORT.LAST_NAME}</option>
           <option value={SORT.FIRST_NAME}>{SORT.FIRST_NAME}</option>
+          <option value={SORT.SCORE}>{SORT.SCORE}</option>
         </SortSelect>
       </SortContainer>
       {reversed ? (

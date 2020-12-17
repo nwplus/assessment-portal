@@ -19,6 +19,8 @@ const sort = (arr, type) => {
           ?.toLocaleLowerCase()
           .localeCompare(b.basicInfo.firstName?.toLocaleLowerCase())
       })
+    case SORT.SCORE:
+      return arr.sort((a, b) => (a.score?.totalScore ?? 0) - (b.score?.totalScore ?? 0))
     default:
     case SORT.TIMESTAMP:
       return arr.sort((a, b) => {
