@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import ResponseInput from './responseInput'
 import { COLOR, TABS } from '../constants'
-import { render } from '@testing-library/react'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { getResumeFile } from '../utility/firebase'
 
 const Main = styled.div`
   padding: 20px;
   max-width: 33%;
   border: 1px solid gray;
   text-align: left;
+  overflow-y: scroll;
+  height: 85vh;
 `
 
 const TabContainer = styled.div`
@@ -19,8 +20,7 @@ const TabContainer = styled.div`
   flex-direction: row;
   padding-bottom: 15px;
   border-bottom: 1px gray solid;
-  width: 100%
-
+  width: 100%;
 `
 
 const Tab = styled.div`
@@ -32,14 +32,14 @@ const Tab = styled.div`
 `
 
 export default function ApplicantResponse(props) {
+  const { hacker } = props
   useEffect(() => {
-    // DO NOT DELETE
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
-    //console.log('applicant', props.hacker)
-    if( props.hacker.hasOwnProperty('skills') 
-    && props.hacker.skills.hasOwnProperty('longAnswers') 
-    && Object.keys(props.hacker.skills.longAnswers).length > 1) {
-      setUserHasData(true) 
+    if (
+      props.hacker.hasOwnProperty('skills') &&
+      props.hacker.skills.hasOwnProperty('longAnswers') &&
+      Object.keys(props.hacker.skills.longAnswers).length > 1
+    ) {
+      setUserHasData(true)
     } else {
       setUserHasData(false)
     }
@@ -48,18 +48,17 @@ export default function ApplicantResponse(props) {
   const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
   const [userHasData, setUserHasData] = useState(false)
 
-
   return (
     <Main>
       <TabContainer>
-        <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Overview </Tab>
-        <Tab onClick={() => setActiveTab(TABS.RESUME)}> Resume </Tab>
-        <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments </Tab>
+        <Tab onClick={() => setActiveTab(TABS.OVERVIEW)}> Basic Info </Tab>
+        <Tab onClick={() => setActiveTab(TABS.RESUME)}> Skills </Tab>
+        <Tab onClick={() => setActiveTab(TABS.COMMENTS)}> Comments(WIP) </Tab>
       </TabContainer>
       {activeTab === TABS.OVERVIEW ? (
         <OverviewTab> </OverviewTab>
       ) : activeTab === TABS.RESUME ? (
-        <ResumeTab pdf={props.hacker.skills.resume}></ResumeTab>
+        <ResumeTab />
       ) : (
         <CommentTab comments={props.hacker.comments}></CommentTab>
       )}
@@ -69,36 +68,79 @@ export default function ApplicantResponse(props) {
   function OverviewTab() {
     if (userHasData) {
       return (
-        <div style={{paddingTop: "10px"}}>
-          <ResponseInput label="Is this your first hackathon?" response={props.hacker.skills.longAnswers[0]} />
-          <ResponseInput label="GitHub/GitLab/BitBucket" response="https://github.com/yungalyx" />
-          <ResponseInput label="Personal Site" response="yes" />
+        <div style={{ paddingTop: '10px' }}>
           <ResponseInput
-            label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
-            response={props.hacker.skills.longAnswers.interest}
+            label="Full name"
+            response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
+          />
+          <ResponseInput label="Email" response={hacker.basicInfo?.email} />
+          <ResponseInput label="Role" response={hacker.basicInfo?.contributionRole} />
+          <ResponseInput
+            label="19 or over?"
+            response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
           />
           <ResponseInput
-            label="What can you teach others at nwHacks? (It can be a specific skill, technology, or an area of domain knowledge)."
-            response={props.hacker.skills.longAnswers.teach}
+            label="School/Major"
+            response={`Studying ${hacker.basicInfo?.major} at ${hacker.basicInfo?.school}`}
           />
+          <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
           <ResponseInput
-            label="Tell us about a recent project you've worked on that you're proud of! It doesn't have to be a technical project."
-            response={props.hacker.skills.longAnswers.passion}
+            label="Hackathons Attended"
+            response={hacker.basicInfo.hackathonsAttended}
           />
         </div>
       )
     } else {
-      return (<div>
-        Selected user has missing data in their application.
-      </div>)
+      return <div>Selected user has missing data in their application.</div>
     }
   }
 
-  function ResumeTab(props) {
+  function ResumeTab() {
     return (
-      <Document file={{ url: 'gs://nwplus-ubc-dev.appspot.com/applicantResumes/testResume.pdf' }}>
-        <Page pageNumber={1} />
-      </Document>
+      <div style={{ paddingTop: '10px' }}>
+        <ResponseInput label="Resume" response={ResumeLink()} />
+        <ResponseInput label="GitHub/GitLab/BitBucket" response={hacker.skills?.github} />
+        <ResponseInput label="LinkedIn" response={hacker.skills?.linkedin} />
+        <ResponseInput label="Portfolio" response={hacker.skills?.portfolio} />
+        <ResponseInput
+          label={
+            <div>
+              Long answers which are either
+              <br />
+              1. Describe how you became interested in the world of technology and where you hope to
+              go from here on out!
+              <br />
+              2. How would you like to challenge yourself during this hackathon?
+            </div>
+          }
+          response={props.hacker.skills.longAnswers}
+        />
+      </div>
+    )
+  }
+
+  function ResumeLink() {
+    const [file, setFile] = useState(null)
+    const [noResume, setNoResume] = useState(false)
+    useEffect(() => {
+      getResumeFile(hacker._id)
+        .then(async url => {
+          const data = await fetch(url)
+          const file = await data.blob()
+          const fileURL = URL.createObjectURL(file)
+          setFile(fileURL)
+        })
+        .catch(() => setNoResume(true))
+    }, [])
+
+    return !file && noResume === false ? (
+      <>Loading</>
+    ) : noResume ? (
+      <div>No resume</div>
+    ) : (
+      <a href={file} target="_blank" rel="noopener noreferrer">
+        View Resume
+      </a>
     )
   }
 
@@ -112,7 +154,7 @@ export default function ApplicantResponse(props) {
         </div>
       )
     } else {
-      return <div> got nothing fam </div>
+      return <div> WIP </div>
     }
   }
 

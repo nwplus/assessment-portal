@@ -70,16 +70,9 @@ const Unscored = styled.p`
 export default function Table(props) {
   const selectedHacker = props.selectedHacker
 
-  function totalScore(hackerScore) {
-    // summing up values score
-    const reducer = (accumulator, currentValue) => accumulator + currentValue
-    return Object.values(hackerScore).reduce(reducer)
-  }
-
   const selectHacker = hacker => {
     props.setSelectedHacker(hacker)
   }
-
 
   function Row(rowProp) {
     return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
@@ -93,7 +86,7 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{totalScore(rowProp.hacker.score)}/20</Scored>
+            <Scored>{rowProp.hacker.score.totalScore ?? '?'}/15</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -110,7 +103,7 @@ export default function Table(props) {
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
           {rowProp.hacker.score ? (
-            <Scored>{totalScore(rowProp.hacker.score)}/20</Scored>
+            <Scored>{rowProp.hacker.score.totalScore ?? '?'}/15</Scored>
           ) : (
             <Unscored>/10</Unscored>
           )}
@@ -120,15 +113,15 @@ export default function Table(props) {
   }
 
   return (
-    <div style={{ display: 'flex'}}>
-      <div style={{ flex: 1, overflowY: "auto", height:"88vh" }}>
+    <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1, overflowY: 'auto', height: '88vh' }}>
         {props.displayedHackers.map((hacker, index) => {
           return <Row key={hacker.basicInfo.email} hacker={hacker} index={index} />
         })}
       </div>
       {Object.keys(selectedHacker).length !== 0 ? (
         <React.Fragment>
-          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} passingUpScore={props.handleChangesfromScoring} />
+          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
           <ApplicantResponse hacker={selectedHacker} style={{ flex: 1 }} />
         </React.Fragment>
       ) : (

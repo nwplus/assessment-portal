@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { COLOR, SORT } from '../constants'
-import { useState } from 'react'
 import Arrow from '../assets/arrow.svg'
 import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
@@ -64,60 +63,21 @@ const FilterIcon = styled.img`
   margin-left: 30px;
 `
 
-export default function ToolBar(props) {
-  const [isDescending, setIsDescending] = useState(false)
-
-  // search by name (currently does not support search by email)
-  const handleSearch = event => {
-    const value = event.target.value
-    props.setDisplayedHackers(
-      props.hackers.filter(hacker => {
-        const fullName = `${hacker.basicInfo.firstName} ${hacker.basicInfo.lastName}`
-        return fullName.toLowerCase().includes(value.toLowerCase().trim())
-      })
-    )
-  }
-
-  const handleSortBy = event => {
-    const value = event.target.value
-    const temp = [...props.hackers]
-    temp.sort((hackerOne, hackerTwo) => {
-      hackerOne = hackerOne['basicInfo']
-      hackerTwo = hackerTwo['basicInfo']
-      switch (value) {
-        case SORT.LAST_NAME:
-          return hackerOne['lastName'].localeCompare(hackerTwo['lastName'])
-        case SORT.FIRST_NAME:
-          return hackerOne['firstName'].localeCompare(hackerTwo['firstName'])
-        default:
-          // sort by time
-          return hackerOne['timestamp'] - hackerTwo['timestamp']
-      }
-    })
-    props.setDisplayedHackers(temp)
-  }
-
-  const handleArrowClick = () => {
-    const temp = [...props.displayedHackers]
-    temp.reverse()
-    props.setDisplayedHackers(temp)
-    setIsDescending(!isDescending)
-  }
-
+export default function ToolBar({ search, sort, reverse, reversed }) {
   return (
     <ToolBarContainer>
       <Search
         type="text"
         placeholder="Search"
         onChange={event => {
-          handleSearch(event)
+          search(event.target.value)
         }}
       />
       <SortContainer>
         <SortByText>Sort by: </SortByText>
         <SortSelect
           onChange={event => {
-            handleSortBy(event)
+            sort(event.target.value)
           }}
         >
           <option value={SORT.TIMESTAMP}>{SORT.TIMESTAMP}</option>
@@ -125,10 +85,10 @@ export default function ToolBar(props) {
           <option value={SORT.FIRST_NAME}>{SORT.FIRST_NAME}</option>
         </SortSelect>
       </SortContainer>
-      {isDescending ? (
-        <DownArrow src={Arrow} onClick={() => handleArrowClick()} />
+      {reversed ? (
+        <DownArrow src={Arrow} onClick={() => reverse()} />
       ) : (
-        <UpArrow src={Arrow} onClick={() => handleArrowClick()} />
+        <UpArrow src={Arrow} onClick={() => reverse()} />
       )}
       <FilterIcon src={Filter} />
     </ToolBarContainer>
