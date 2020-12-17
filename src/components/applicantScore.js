@@ -5,6 +5,7 @@ import ScoreInput from './scoreInput'
 import { updateApplicantScore } from '../utility/firebase'
 import { AuthContext } from '../utility/auth'
 import moment from 'moment'
+import { MAX_SCORE, MAX_SCORES } from '../constants'
 
 const Main = styled.div`
   padding: 0px 20px;
@@ -46,17 +47,6 @@ export default function ApplicantScore(props) {
 
   const handleClick = async (value, label) => {
     switch (label) {
-      case 'Github/Personal Website':
-        await updateApplicantScore(
-          'nwHacks2021',
-          props.hacker._id,
-          {
-            ...score,
-            WebsiteScore: value,
-          },
-          user.email
-        )
-        break
       case 'Resume/LinkedIn':
         await updateApplicantScore(
           'nwHacks2021',
@@ -89,12 +79,13 @@ export default function ApplicantScore(props) {
       <Main>
         <h4>Scoring</h4>
         <ScoreInput
-          label="Github/Personal Website"
-          score={score.WebsiteScore}
+          label="Resume/LinkedIn"
+          score={score.ResumeScore}
           handleClick={handleClick}
+          maxScore={MAX_SCORES.RESUME}
         />
-        <ScoreInput label="Resume/LinkedIn" score={score.ResumeScore} handleClick={handleClick} />
         <ScoreInput
+          maxScore={MAX_SCORES.ESSAY}
           label="Written Response Score"
           score={score.ResponseScore}
           handleClick={handleClick}
@@ -102,7 +93,10 @@ export default function ApplicantScore(props) {
       </Main>
       {hasScore && (
         <Summary>
-          <label> Total Score: {hacker.score?.totalScore}/15 </label>
+          <label>
+            {' '}
+            Total Score: {hacker.score?.totalScore}/{MAX_SCORE}{' '}
+          </label>
           <br />
           <label> Last updated by: {hacker.score?.lastUpdatedBy}</label>
           <br />
