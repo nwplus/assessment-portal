@@ -44,3 +44,15 @@ export const MAX_SCORE = Object.values(MAX_SCORES).reduce(
   (acc, curr) => acc + curr.value * curr.weight,
   0
 )
+export const APPLICATION_STATUS = {
+  applied: {
+    color: COLOR.RED,
+    textColor: 'white',
+    text: 'applied',
+  },
+  scored: {
+    color: COLOR.BLUE_TEXT,
+    textColor: 'white',
+    text: 'scored',
+  },
+}
