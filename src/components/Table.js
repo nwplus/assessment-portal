@@ -120,12 +120,15 @@ export default function Table(props) {
   }
 
   const AllHackersRow = () => {
+    const graded = props.displayedHackers.filter(
+      h => h.status.applicationStatus === APPLICATION_STATUS.scored.text
+    ).length
     return (
       <UnselectedRowDiv>
         <div style={styles.nameEmailContainer}>
           <UnselectedName>
-            {props.displayedHackers.length}{' '}
-            {props.displayedHackers.length === 1 ? 'Hacker' : 'Hackers'}
+            {graded}/{props.displayedHackers.length}{' '}
+            {props.displayedHackers.length === 1 ? 'Hacker graded' : 'Hackers graded'}
           </UnselectedName>
         </div>
       </UnselectedRowDiv>

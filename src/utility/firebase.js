@@ -32,8 +32,6 @@ export const getAllApplicants = async (website, callback) => {
 }
 
 function calculateTotalScore(hackerScore) {
-  console.log('scoring')
-  console.log(hackerScore)
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue
   return Object.values(hackerScore).reduce(reducer)
