@@ -75,8 +75,8 @@ export default function ApplicantResponse(props) {
           label="19 or over?"
           response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
         />
-        <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.major}`} />
-        <ResponseInput label="Major" response={hacker.basicInfo?.school} />
+        <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.school}`} />
+        <ResponseInput label="Major" response={hacker.basicInfo?.major} />
         <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
         <ResponseInput label="Hackathons Attended" response={hacker.basicInfo.hackathonsAttended} />
         <ResponseInput
