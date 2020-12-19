@@ -19,7 +19,7 @@ export default function ScoreInput({ label, score, handleClick, maxScore }) {
             <Number
               label={label}
               number={num}
-              active={score / maxScore.weight === num}
+              active={score != null && score / maxScore.weight === num}
               key={num}
               handleClick={handleMultipier}
             />

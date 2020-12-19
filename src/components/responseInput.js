@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import PopoutWindow from './PopoutWindow'
+import Button from './Button'
 
 export default function ResponseInput({ url, label, response, openable }) {
   const [open, setOpen] = useState(false)
 
   const OpenButton = () => (
     <div style={{ textAlign: 'center' }}>
-      <button
+      <Button
+        width="flex"
         onClick={() => {
           setOpen(!open)
         }}
       >
-        {open ? 'close window' : 'open in new window'}
-      </button>
+        {open ? 'Close window' : 'Open in new window'}
+      </Button>
     </div>
   )
 
