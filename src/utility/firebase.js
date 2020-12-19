@@ -25,13 +25,15 @@ export const getAllApplicants = async (website, callback) => {
     .collection('Hackathons')
     .doc(website) // hardcode for event
     .collection('Applicants')
-    .where('status.applicationStatus', '==', 'applied')
+    .where('status.applicationStatus', '!=', 'inProgress')
     .onSnapshot(snap => {
       callback(snap.docs.map(doc => doc.data()))
     })
 }
 
 function calculateTotalScore(hackerScore) {
+  console.log('scoring')
+  console.log(hackerScore)
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue
   return Object.values(hackerScore).reduce(reducer)
@@ -39,8 +41,6 @@ function calculateTotalScore(hackerScore) {
 
 export const updateApplicantScore = async (website, applicantID, object, adminEmail) => {
   const totalScore = calculateTotalScore(object)
-  console.log(object)
-  console.log(totalScore)
   db.collection('Hackathons')
     .doc(website) // hardcode for event
     .collection('Applicants')
@@ -60,4 +60,17 @@ export const updateApplicantScore = async (website, applicantID, object, adminEm
 export const getResumeFile = async userId => {
   const ref = storage.ref(`applicantResumes/${userId}`)
   return await ref.getDownloadURL()
+}
+
+export const updateApplicantStatus = async (userId, applicationStatus) => {
+  return db
+    .collection('Hackathons')
+    .doc('nwHacks2021') // hardcode for event
+    .collection('Applicants')
+    .doc(userId)
+    .update({
+      status: {
+        applicationStatus,
+      },
+    })
 }

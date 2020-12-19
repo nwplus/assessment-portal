@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, MAX_SCORE } from '../constants'
+import { APPLICATION_STATUS, COLOR, MAX_SCORE } from '../constants'
 import ApplicantResponse from './applicantResponse'
 import ApplicantScore from './applicantScore'
-
+import Tag from '../components/Tag'
 const styles = {
   nameEmailContainer: {
     flex: 3,
@@ -75,11 +75,13 @@ export default function Table(props) {
   }
 
   function Row(rowProp) {
+    const appStatus = rowProp.hacker.status.applicationStatus
     return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
       <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
           <SelectedName>
-            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}
+            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}{' '}
+            <Tag {...APPLICATION_STATUS[appStatus]} />
           </SelectedName>
           <BlueText>{rowProp.hacker.basicInfo.email}</BlueText>
         </div>
@@ -98,7 +100,8 @@ export default function Table(props) {
       <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
           <UnselectedName>
-            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}
+            {rowProp.hacker.basicInfo.firstName} {rowProp.hacker.basicInfo.lastName}{' '}
+            <Tag {...APPLICATION_STATUS[appStatus]} />
           </UnselectedName>
           <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
         </div>

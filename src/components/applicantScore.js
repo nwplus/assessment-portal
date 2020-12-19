@@ -2,10 +2,11 @@
 import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import ScoreInput from './scoreInput'
-import { updateApplicantScore } from '../utility/firebase'
+import { updateApplicantScore, updateApplicantStatus } from '../utility/firebase'
 import { AuthContext } from '../utility/auth'
 import moment from 'moment'
-import { MAX_SCORE, MAX_SCORES } from '../constants'
+import { APPLICATION_STATUS, MAX_SCORE, MAX_SCORES } from '../constants'
+import { Button } from '../components/Button'
 
 const Main = styled.div`
   padding: 0px 20px;
@@ -22,6 +23,8 @@ const Summary = styled.div`
 export default function ApplicantScore(props) {
   const { hacker } = props
   const [hasScore, setHasScore] = useState(false)
+
+  const appStatus = hacker.status.applicationStatus
 
   const { user } = useContext(AuthContext)
 
@@ -42,6 +45,10 @@ export default function ApplicantScore(props) {
       setHasScore(false)
     }
   }, [hacker])
+
+  const isGraded = scores => {
+    return !Object.values(scores).some(x => x === null)
+  }
 
   const handleClick = async (value, label) => {
     switch (label) {
@@ -103,6 +110,19 @@ export default function ApplicantScore(props) {
             at: {moment(hacker.score?.lastUpdated.toDate()).format('dddd, MMMM Do, YYYY h:mm:ss A')}
           </label>
           <br />
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <Button
+              width="flex"
+              onClick={async () => {
+                if (isGraded(score)) {
+                  await updateApplicantStatus(hacker._id, APPLICATION_STATUS.scored.text)
+                }
+              }}
+              disabled={!isGraded(score) || appStatus === APPLICATION_STATUS.scored.text}
+            >
+              Mark as graded
+            </Button>
+          </div>
         </Summary>
       )}
     </div>
