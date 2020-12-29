@@ -67,8 +67,6 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     .collection('Applicants')
     .doc(userId)
     .update({
-      status: {
-        applicationStatus,
-      },
+      'status.applicationStatus': applicationStatus,
     })
 }
