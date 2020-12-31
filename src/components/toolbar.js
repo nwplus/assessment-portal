@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { COLOR, SORT } from '../constants'
 import Arrow from '../assets/arrow.svg'
@@ -6,8 +6,8 @@ import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
 import Button from './Button'
 import AcceptingModal from './acceptingModal'
-import { CSVLink } from 'react-csv'
-import { getCSVData } from '../utility/firebase'
+import CSVButton from './CSVButton'
+import { logout } from '../utility/firebase'
 
 const ToolBarContainer = styled.div`
   width: 100%;
@@ -18,7 +18,7 @@ const ToolBarContainer = styled.div`
 const Search = styled.input`
   width: 480px;
   height: 48px;
-  margin: 8px 100px 8px 20px;
+  margin: 8px 10px 8px 10px;
   padding: 0px 45px;
   font-size: 16px;
   display: inline-block;
@@ -69,10 +69,11 @@ const FilterIcon = styled.img`
 
 export default function ToolBar({ search, sort, reverse, reversed }) {
   const [showAcceptance, setShowAcceptance] = useState(false)
-  const [csvData, setCSVData] = useState('')
-  const downloadLink = useRef()
   return (
     <ToolBarContainer>
+      <Button bColor={COLOR.RED} width="flex" onClick={() => logout()}>
+        Logout
+      </Button>
       <Search
         type="text"
         placeholder="Search"
@@ -108,25 +109,8 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
       >
         Accept
       </Button>
-      <Button
-        width="flex"
-        bColor="black"
-        onClick={async () => {
-          const data = await getCSVData()
-          setCSVData(data)
-          console.log('called')
-          downloadLink.current.link.click()
-        }}
-      >
-        Download CSV
-      </Button>
+      <CSVButton />
       {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
-      <CSVLink
-        style={{ visibility: 'hidden' }}
-        ref={downloadLink}
-        filename="applicants.csv"
-        data={csvData}
-      />
     </ToolBarContainer>
   )
 }

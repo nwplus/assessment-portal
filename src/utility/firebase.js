@@ -107,3 +107,7 @@ export const getCSVData = async () => {
   CSV.unshift(['firstName', 'lastName', 'email', 'total score', 'status'])
   return CSV
 }
+
+export const logout = () => {
+  firebase.auth().signOut()
+}
