@@ -55,4 +55,9 @@ export const APPLICATION_STATUS = {
     textColor: 'white',
     text: 'scored',
   },
+  accepted: {
+    color: 'green',
+    textColor: 'white',
+    text: 'accepted',
+  },
 }
