@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { COLOR, SORT } from '../constants'
 import Arrow from '../assets/arrow.svg'
 import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
+import Button from './Button'
+import AcceptingModal from './acceptingModal'
+import { CSVLink } from 'react-csv'
+import { getCSVData } from '../utility/firebase'
 
 const ToolBarContainer = styled.div`
   width: 100%;
@@ -64,6 +68,9 @@ const FilterIcon = styled.img`
 `
 
 export default function ToolBar({ search, sort, reverse, reversed }) {
+  const [showAcceptance, setShowAcceptance] = useState(false)
+  const [csvData, setCSVData] = useState('')
+  const downloadLink = useRef()
   return (
     <ToolBarContainer>
       <Search
@@ -92,6 +99,34 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
         <UpArrow src={Arrow} onClick={() => reverse(reverse => !reverse)} />
       )}
       <FilterIcon src={Filter} />
+      <Button
+        width="flex"
+        bColor="black"
+        onClick={async () => {
+          setShowAcceptance(true)
+        }}
+      >
+        Accept
+      </Button>
+      <Button
+        width="flex"
+        bColor="black"
+        onClick={async () => {
+          const data = await getCSVData()
+          setCSVData(data)
+          console.log('called')
+          downloadLink.current.link.click()
+        }}
+      >
+        Download CSV
+      </Button>
+      {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
+      <CSVLink
+        style={{ visibility: 'hidden' }}
+        ref={downloadLink}
+        filename="applicants.csv"
+        data={csvData}
+      />
     </ToolBarContainer>
   )
 }

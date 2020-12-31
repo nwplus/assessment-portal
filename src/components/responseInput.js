@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PopoutWindow from './PopoutWindow'
 import Button from './Button'
+import { COLOR } from '../constants'
 
 export default function ResponseInput({ url, label, response, openable }) {
   const [open, setOpen] = useState(false)
@@ -8,6 +9,7 @@ export default function ResponseInput({ url, label, response, openable }) {
   const OpenButton = () => (
     <div style={{ textAlign: 'center' }}>
       <Button
+        bColor={COLOR.BLUE_TEXT}
         width="flex"
         onClick={() => {
           setOpen(!open)

@@ -42,7 +42,7 @@ const StyledButton = styled.a`
     opacity: 0.5;
     `}
   color: white;
-  background: ${COLOR.BLUE_TEXT};
+  background: ${p => p.bColor};
   :hover {
     ${p =>
       p.disabled
@@ -56,6 +56,7 @@ const StyledButton = styled.a`
   :focus {
     box-shadow: 0 0 0 0.2rem ${hexToRgba(COLOR.BLUE_TEXT, 0.5)};
   }
+  height: 25px;
 `
 
 export const Button = props => {

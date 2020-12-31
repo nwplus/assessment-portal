@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/storage'
 import 'firebase/firestore'
+import { APPLICATION_STATUS } from '../constants'
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -69,4 +70,40 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     .update({
       'status.applicationStatus': applicationStatus,
     })
+}
+
+export const getApplicantsToAccept = async score => {
+  const applicants = await db
+    .collection('Hackathons')
+    .doc('nwHacks2021')
+    .collection('Applicants')
+    .where('score.totalScore', '>=', score - 1)
+    .get()
+  return applicants.docs
+    .filter(app => {
+      const appStatus = app.data().status.applicationStatus
+      const newHacker = app.data().basicInfo.hackathonsAttended === 0
+      if (appStatus !== APPLICATION_STATUS.scored.text) return false
+      if (newHacker) return true
+      return app.data().score.totalScore >= score
+    })
+    .map(doc => doc.data())
+}
+
+export const getCSVData = async () => {
+  const apps = await db
+    .collection('Hackathons')
+    .doc('nwHacks2021') // hardcode for event
+    .collection('Applicants')
+    .get()
+  let CSV = apps.docs.map(doc => {
+    const {
+      basicInfo: { firstName, lastName, email },
+      status: { applicationStatus },
+    } = doc.data()
+    const totalScore = doc.data().score?.totalScore ?? '?'
+    return [firstName, lastName, email, totalScore, applicationStatus]
+  })
+  CSV.unshift(['firstName', 'lastName', 'email', 'total score', 'status'])
+  return CSV
 }

@@ -5,7 +5,7 @@ import ScoreInput from './scoreInput'
 import { updateApplicantScore, updateApplicantStatus } from '../utility/firebase'
 import { AuthContext } from '../utility/auth'
 import moment from 'moment'
-import { APPLICATION_STATUS, MAX_SCORE, MAX_SCORES } from '../constants'
+import { COLOR, APPLICATION_STATUS, MAX_SCORE, MAX_SCORES } from '../constants'
 import { Button } from '../components/Button'
 
 const Main = styled.div`
@@ -113,6 +113,7 @@ export default function ApplicantScore(props) {
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <Button
               width="flex"
+              bColor={COLOR.BLUE_TEXT}
               onClick={async () => {
                 if (isGraded(score)) {
                   await updateApplicantStatus(hacker._id, APPLICATION_STATUS.scored.text)
