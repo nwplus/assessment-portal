@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Table from '../components/Table'
 import ToolBar from '../components/toolbar'
-import { SORT } from '../constants'
+import { APPLICATION_STATUS, SORT } from '../constants'
 import { getAllApplicants } from '../utility/firebase'
 
 const sort = (arr, type) => {
@@ -18,6 +18,14 @@ const sort = (arr, type) => {
         return a.basicInfo.firstName
           ?.toLocaleLowerCase()
           .localeCompare(b.basicInfo.firstName?.toLocaleLowerCase())
+      })
+    case SORT.STATUS:
+      const priority = Reflect.ownKeys(APPLICATION_STATUS)
+      return arr.sort((a, b) => {
+        return (
+          priority.indexOf(a.status?.applicationStatus) -
+          priority.indexOf(b.status?.applicationStatus)
+        )
       })
     case SORT.SCORE:
       return arr.sort((a, b) => (a.score?.totalScore ?? 0) - (b.score?.totalScore ?? 0))

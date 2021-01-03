@@ -27,6 +27,7 @@ export const SORT = {
   LAST_NAME: 'Last Name',
   FIRST_NAME: 'First Name',
   SCORE: 'Total Score',
+  STATUS: 'Status',
 }
 
 export const MAX_SCORES = {
