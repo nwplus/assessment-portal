@@ -8,6 +8,7 @@ import Button from './Button'
 import AcceptingModal from './acceptingModal'
 import CSVButton from './CSVButton'
 import { logout } from '../utility/firebase'
+import FilterModal from './FilterModal'
 
 const ToolBarContainer = styled.div`
   width: 100%;
@@ -67,8 +68,9 @@ const FilterIcon = styled.img`
   margin-left: 30px;
 `
 
-export default function ToolBar({ search, sort, reverse, reversed }) {
+export default function ToolBar({ search, sort, reverse, reversed, filter }) {
   const [showAcceptance, setShowAcceptance] = useState(false)
+  const [showFilter, setShowFilter] = useState(false)
   return (
     <ToolBarContainer>
       <Button bColor={COLOR.RED} width="flex" onClick={() => logout()}>
@@ -100,7 +102,7 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
       ) : (
         <UpArrow src={Arrow} onClick={() => reverse(reverse => !reverse)} />
       )}
-      <FilterIcon src={Filter} />
+      <FilterIcon onClick={() => setShowFilter(f => !f)} src={Filter} />
       <Button
         width="flex"
         bColor="black"
@@ -112,6 +114,7 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
       </Button>
       <CSVButton />
       {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
+      {showFilter && <FilterModal setShowing={setShowFilter} filter={filter} />}
     </ToolBarContainer>
   )
 }
