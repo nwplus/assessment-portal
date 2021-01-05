@@ -14,7 +14,6 @@ export default function CSVButton() {
         onClick={async () => {
           const data = await getCSVData()
           setCSVData(data)
-          console.log('called')
           downloadLink.current.link.click()
         }}
       >
