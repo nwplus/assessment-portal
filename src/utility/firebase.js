@@ -3,6 +3,8 @@ import 'firebase/auth'
 import 'firebase/storage'
 import 'firebase/firestore'
 import { APPLICATION_STATUS } from '../constants'
+import JSZip from 'jszip'
+import download from 'downloadjs'
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -57,8 +59,12 @@ export const updateApplicantScore = async (website, applicantID, object, adminEm
 }
 
 export const getResumeFile = async userId => {
-  const ref = storage.ref(`applicantResumes/${userId}`)
-  return await ref.getDownloadURL()
+  try {
+    const ref = storage.ref(`applicantResumes/${userId}`)
+    return await ref.getDownloadURL()
+  } catch (e) {
+    return undefined
+  }
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus) => {
@@ -126,6 +132,48 @@ export const getCSVData = async () => {
     'Application Status',
   ])
   return CSV
+}
+
+export const getAllResumes = async () => {
+  const apps = await db
+    .collection('Hackathons')
+    .doc('nwHacks2021') // hardcode for event
+    .collection('Applicants')
+    .where('status.applicationStatus', '!=', 'inProgress')
+    .get()
+
+  const sharableApps = apps.docs.filter(app => {
+    const {
+      termsAndConditions: { shareWithSponsors },
+    } = app.data()
+    return shareWithSponsors
+  })
+
+  const namesAndIds = sharableApps.map(doc => {
+    const {
+      basicInfo: { firstName, lastName },
+    } = doc.data()
+    return {
+      id: doc.id,
+      name: `${firstName} ${lastName}`,
+    }
+  })
+
+  const urlPromises = namesAndIds.map(async info => {
+    const url = await getResumeFile(info.id)
+    return { ...info, url }
+  })
+
+  const APPUrls = await Promise.all(urlPromises)
+
+  const zip = new JSZip()
+  const zipPromises = APPUrls.map(async ({ url, name }) => {
+    const resume = (await fetch(url)).blob()
+    zip.file(`${name}.pdf`, resume, { binary: true })
+  })
+  await Promise.all(zipPromises)
+  const finishedZip = await zip.generateAsync({ type: 'blob' })
+  download(finishedZip, 'Resumes', 'application/zip')
 }
 
 export const logout = () => {
