@@ -6,8 +6,8 @@ import MagnifyingGlass from '../assets/magnifyingGlass.svg'
 import Filter from '../assets/filter.svg'
 import Button from './Button'
 import AcceptingModal from './acceptingModal'
-import CSVButton from './CSVButton'
 import { logout } from '../utility/firebase'
+import ExportModal from './ExportModal'
 
 const ToolBarContainer = styled.div`
   width: 100%;
@@ -68,6 +68,7 @@ const FilterIcon = styled.img`
 `
 
 export default function ToolBar({ search, sort, reverse, reversed }) {
+  const [showExport, setShowExport] = useState(false)
   const [showAcceptance, setShowAcceptance] = useState(false)
   return (
     <ToolBarContainer>
@@ -110,8 +111,17 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
       >
         Accept
       </Button>
-      <CSVButton />
+      <Button
+        width=" "
+        bColor="black"
+        onClick={async () => {
+          setShowExport(true)
+        }}
+      >
+        Export
+      </Button>
       {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
+      {showExport && <ExportModal setShowing={setShowExport} />}
     </ToolBarContainer>
   )
 }
