@@ -104,7 +104,17 @@ export const getCSVData = async () => {
     .get()
   let CSV = apps.docs.map(doc => {
     const {
-      basicInfo: { firstName, lastName, email, educationLevel, phoneNumber, school, location },
+      basicInfo: {
+        firstName,
+        lastName,
+        email,
+        educationLevel,
+        phoneNumber,
+        school,
+        location,
+        major,
+        hackathonsAttended,
+      },
       status: { applicationStatus },
     } = doc.data()
     const totalScore = doc.data().score?.totalScore ?? '?'
@@ -118,6 +128,8 @@ export const getCSVData = async () => {
       location,
       totalScore,
       applicationStatus,
+      major,
+      hackathonsAttended,
     ]
   })
   CSV.unshift([
@@ -130,6 +142,8 @@ export const getCSVData = async () => {
     'Country',
     'Total Score',
     'Application Status',
+    'Major',
+    '# of hackathons attended',
   ])
   return CSV
 }
